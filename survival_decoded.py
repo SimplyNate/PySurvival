@@ -1,6 +1,11 @@
 ########################################################################################################################
 """
 Partial game code from http://usingpython.com/programs/ 'Crafting Challenge' Game
+Extended by SimplyNate
+
+Copyright SimplyNate
+Licensed under Creative Commons 4.0
+https://creativecommons.org/licenses/by-sa/4.0/
 
 Coding Module - Python Lab
 Craft the items indicated in the Quests panel to win the game.
