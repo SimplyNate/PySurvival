@@ -1,11 +1,7 @@
 ########################################################################################################################
 """
-Partial game code from http://usingpython.com/programs/ 'Crafting Challenge' Game
-Extended by SimplyNate
-
-Copyright SimplyNate
-Licensed under Creative Commons 4.0
-https://creativecommons.org/licenses/by-sa/4.0/
+Inspired by http://usingpython.com/programs/ 'Crafting Challenge' Game
+Created by SimplyNate
 
 Coding Module - Python Lab
 Craft the items indicated in the Quests panel to win the game.
@@ -13,7 +9,7 @@ Hunger ticks down after each input by the amount indicated below.
 When hunger reaches 0, Health will begin ticking down instead after each input.
 When health reaches 0, the game ends.
 
-GenCyber Hawaii SecurityX Camp 2018
+Made for the GenCyber Hawaii SecurityX Camp 2018
 """
 ########################################################################################################################
 
@@ -256,8 +252,8 @@ class Gui:
 
         # Binds key to perform a specific function
         self.master.bind('<Return>', self.parse)  # Sends data
-        self.master.bind('<Up>', self.gethistoryup)  # Gets previous args
-        self.master.bind('<Down>', self.gethistorydown)  # Gets previous args
+        self.master.bind('<Up>', self.get_history_up)  # Gets previous args
+        self.master.bind('<Down>', self.get_history_down)  # Gets previous args
 
         # Places rest of UI
         self.outbox.place(y=340, width=960, height=106)
@@ -346,16 +342,16 @@ class Gui:
         Gui.argument = Gui.argument.strip().lower()  # Normalizes input
 
         if "craft" in Gui.argument and len(Gui.argument.split(" ")) > 1:
-            Gui.play(self, Gui.argument)  # Runs rest of game logic
+            Gui.craft(self, Gui.argument)  # Runs rest of game logic
 
         elif "eat " in Gui.argument:
             tokens = Gui.argument.split(" ")
-            self.writeToOutbox("Eating " + tokens[1])
+            self.write_to_outbox("Eating " + tokens[1])
             Gui.eat(self, tokens[1])
 
         elif "gather " in Gui.argument:
             tokens = Gui.argument.split(" ")
-            self.writeToOutbox("Gathering " + tokens[1])
+            self.write_to_outbox("Gathering " + tokens[1])
             Gui.gather(self, tokens[1])
 
         elif "quests" in Gui.argument or "q" in Gui.argument and len(Gui.argument) == 1:
@@ -364,20 +360,20 @@ class Gui:
                 self.quests.config(relief="sunken", bg="white", fg="black")
                 self.questbox.config(state="normal")
                 self.questbox.delete("1.0", END)
-                a = geteverything(Gui.game.quests)  # Different way to do it
+                a = get_everything(Gui.game.quests)  # Different way to do it
                 self.questbox.insert(INSERT, a)
                 self.questbox.place(x=0, y=210, height=100, width=240)
                 self.questbox.config(state="disabled")
 
                 # Output Box
-                self.writeToOutbox("Opened Quests menu")
+                self.write_to_outbox("Opened Quests menu")
             else:
                 Gui.qtimes = 0
                 self.quests.config(relief="groove", bg="black", fg="white")
                 self.questbox.place_forget()
 
                 # Output Box
-                self.writeToOutbox("Closed Quests menu")
+                self.write_to_outbox("Closed Quests menu")
 
         elif "inventory" in Gui.argument or "i" in Gui.argument and len(Gui.argument) == 1:
             Gui.itimes += 1
@@ -385,17 +381,17 @@ class Gui:
                 self.inventory.config(relief="sunken", bg="white", fg="black")
                 self.inventorybox.config(state="normal")
                 self.inventorybox.delete("1.0", END)
-                self.inventorybox.insert(INSERT, geteverything(Gui.game.items))
+                self.inventorybox.insert(INSERT, get_everything(Gui.game.items))
                 self.inventorybox.place(x=240, y=210, height=100, width=240)
                 self.inventorybox.config(state="disabled")
 
-                self.writeToOutbox("Opened Inventory menu")
+                self.write_to_outbox("Opened Inventory menu")
             else:
                 Gui.itimes = 0
                 self.inventory.config(relief="groove", bg="black", fg="white")
                 self.inventorybox.place_forget()
 
-                self.writeToOutbox("Closed Inventory menu")
+                self.write_to_outbox("Closed Inventory menu")
 
         elif "crafting" == Gui.argument or "c" in Gui.argument and len(Gui.argument) == 1:
             Gui.ctimes += 1
@@ -403,17 +399,17 @@ class Gui:
                 self.crafting.config(relief="sunken", bg="white", fg="black")
                 self.craftbox.config(state="normal")
                 self.craftbox.delete("1.0", END)
-                self.craftbox.insert(INSERT, geteverything(Gui.game.craft))
+                self.craftbox.insert(INSERT, get_everything(Gui.game.craft))
                 self.craftbox.place(x=480, y=210, height=100, width=240)
                 self.craftbox.config(state="disabled")
 
-                self.writeToOutbox("Opened Crafting menu")
+                self.write_to_outbox("Opened Crafting menu")
             else:
                 Gui.ctimes = 0
                 self.crafting.config(relief="groove", bg="black", fg="white")
                 self.craftbox.place_forget()
 
-                self.writeToOutbox("Closed Crafting menu")
+                self.write_to_outbox("Closed Crafting menu")
 
         elif "help" in Gui.argument or "h" in Gui.argument and len(Gui.argument) == 1:
             Gui.htimes += 1
@@ -421,20 +417,20 @@ class Gui:
                 self.help.config(relief="sunken", bg="white", fg="black")
                 self.helpbox.config(state="normal")
                 self.helpbox.delete("1.0", END)
-                self.helpbox.insert(INSERT, geteverything(Gui.game.commands))
+                self.helpbox.insert(INSERT, get_everything(Gui.game.commands))
                 self.helpbox.place(x=720, y=210, height=100, width=240)
                 self.helpbox.config(state="disabled")
 
-                self.writeToOutbox("Opened Help menu")
+                self.write_to_outbox("Opened Help menu")
             else:
                 Gui.htimes = 0
                 self.help.config(relief="groove", bg="black", fg="white")
                 self.helpbox.place_forget()
 
-                self.writeToOutbox("Closed Help menu")
+                self.write_to_outbox("Closed Help menu")
 
         else:
-            self.writeToOutbox(Gui.argument + " is not a valid argument")
+            self.write_to_outbox(Gui.argument + " is not a valid argument")
 
         # if the command is not blank
         if Gui.argument is not "" and Gui.argument is not " ":
@@ -472,7 +468,7 @@ class Gui:
                 self.hbar.configure(style="red.Horizontal.TProgressbar")
 
     # Function that "returns" previous commands
-    def gethistoryup(self, event):
+    def get_history_up(self, event):
         keypress = event
         amt = len(Gui.history)
         if amt > 0:
@@ -486,7 +482,7 @@ class Gui:
                 self.userCommand.insert(0, Gui.history[Gui.index])
 
     # Function that "returns" previous commands (backwards)
-    def gethistorydown(self, event):
+    def get_history_down(self, event):
         keypress = event
         if len(Gui.history) > 0:
             Gui.index -= 1
@@ -497,7 +493,7 @@ class Gui:
                 Gui.index = -1
                 self.userCommand.delete(0, 'end')
 
-    def writeToOutbox(self, text):
+    def write_to_outbox(self, text):
         text = text + "\n"
         self.outbox.config(state="normal")
         self.outbox.insert(END, text)
@@ -506,7 +502,7 @@ class Gui:
 
     def eat(self, item):
         if item in Gui.game.foods.keys() and Gui.game.foods[item]["amount"] > 0:
-            self.writeToOutbox("Restored " + str(Gui.game.foods[item]["restores"]) + " hunger")
+            self.write_to_outbox("Restored " + str(Gui.game.foods[item]["restores"]) + " hunger")
             if Gui.game.hero["hunger"] != 100:
                 Gui.game.hero["hunger"] += Gui.game.foods[item]["restores"]
                 if Gui.game.hero["hunger"] > 100:
@@ -515,10 +511,10 @@ class Gui:
             Gui.game.foods[item]["amount"] -= 1
             self.inventorybox.config(state="normal")
             self.inventorybox.delete("1.0", END)
-            self.inventorybox.insert(INSERT, geteverything(Gui.game.items))
+            self.inventorybox.insert(INSERT, get_everything(Gui.game.items))
             self.inventorybox.config(state="disabled")
         else:
-            self.writeToOutbox(item + " is not an edible item")
+            self.write_to_outbox(item + " is not an edible item")
             if Gui.game.hero["hunger"] > 0:
                 Gui.game.hero["hunger"] -= Gui.game.hero["hungerDecay"]
                 if Gui.game.hero["hunger"] < 0:
@@ -535,97 +531,70 @@ class Gui:
 
     def gather(self, item):
         if item in Gui.game.gatherable:
-            self.writeToOutbox("Gathered " + str(Gui.game.hero["gatherRate"]) + " " + item)
+            self.write_to_outbox("Gathered " + str(Gui.game.hero["gatherRate"]) + " " + item)
             Gui.game.items[item] += Gui.game.hero["gatherRate"]
             self.inventorybox.config(state="normal")
             self.inventorybox.delete("1.0", END)
-            self.inventorybox.insert(INSERT, geteverything(Gui.game.items))
+            self.inventorybox.insert(INSERT, get_everything(Gui.game.items))
             self.inventorybox.config(state="disabled")
         elif item in Gui.game.foods:
-            self.writeToOutbox("Gathered " + item)
+            self.write_to_outbox("Gathered " + item)
             Gui.game.foods[item]["amount"] += Gui.game.hero["gatherRate"]
             self.inventorybox.config(state="normal")
             self.inventorybox.delete("1.0", END)
-            self.inventorybox.insert(INSERT, geteverything(Gui.game.items))
+            self.inventorybox.insert(INSERT, get_everything(Gui.game.items))
             self.inventorybox.config(state="disabled")
         else:
-            self.writeToOutbox(item + " is not gatherable")
+            self.write_to_outbox(item + " is not gatherable")
 
     # Method for Crafting items
-    def play(self, arg):
+    def craft(self, arg):
 
-        command = arg.split()
+        command = arg.split(" ")
 
-        if len(command) > 0:
-            verb = command[0].lower()
-        else:
-            verb = None
         if len(command) > 1:
             item = command[1].lower()
         else:
-            item = None
+            Gui.write_to_outbox(self, "Error: No item specified.")
+            return
+        # If a quantity is defined, try to extract it
         if len(command) > 2:
             try:
                 quantity = int(command[2].lower())
             except ValueError:
-                Gui.writeToOutbox(self, "Error: Please switch position of item and quantity")
-                quantity = None
+                Gui.write_to_outbox(self, "Error: Please switch position of item and quantity")
+                return
         else:
             quantity = 1
 
-        if verb == "craft":
+        Gui.write_to_outbox(self, "Crafting " + item + ":")
+        if item in Gui.game.craft:
 
-            Gui.writeToOutbox(self, "making " + item + ":")
-            if item in Gui.game.craft:
-
-                for i in Gui.game.craft[item]:
-                    Gui.writeToOutbox(self, "  you need : " + str(Gui.game.craft[item][i] * quantity) + " " + i +
-                                      " and you have " + str(Gui.game.items[i]))
-
-                canBeMade = True
-
-                for i in Gui.game.craft[item]:
-                    if (Gui.game.craft[item][i] * quantity) > Gui.game.items[i]:
-                        Gui.writeToOutbox(self, "item cannot be crafted\n")
-                        canBeMade = False
-                        break
-
-                if canBeMade is True:
-                    for i in Gui.game.craft[item]:
-                        Gui.game.items[i] -= Gui.game.craft[item][i] * quantity
-
-                    Gui.game.items[item] += 1 * quantity
-
-                    if quantity > 1:
-                        Gui.removeQuest(self, item)
-                        Gui.writeToOutbox(self, "items crafted\n")
-                        self.inventorybox.config(state="normal")
-                        self.inventorybox.delete("1.0", END)
-                        self.inventorybox.insert(INSERT, geteverything(Gui.game.items))
-                        self.inventorybox.config(state="disabled")
-
-                    else:
-                        Gui.removeQuest(self, item)
-                        Gui.writeToOutbox(self, "item crafted\n")
-                        self.inventorybox.config(state="normal")
-                        self.inventorybox.delete("1.0", END)
-                        self.inventorybox.insert(INSERT, geteverything(Gui.game.items))
-                        self.inventorybox.config(state="disabled")
-
-                if len(Gui.game.quests) == 0:
-                    Gui.writeToOutbox(self, "\n**YOU HAVE MANAGED TO SURVIVE!\nWELL DONE!")
-                    self.endgame("win")
-
-            else:
-                Gui.writeToOutbox(self, "you can't")
+            # Print item requirements and check if all items are present
+            for i in Gui.game.craft[item]:
+                Gui.write_to_outbox(self, f"{item} requires: {str(Gui.game.craft[item][i] * quantity)} {i}. You have: {str(Gui.game.items[i])}")
+                if (Gui.game.craft[item][i] * quantity) > Gui.game.items[i]:
+                    Gui.write_to_outbox(self, "Item cannot be crafted.")
+                    return
+            # Remove the items from the inventory
+            for i in Gui.game.craft[item]:
+                Gui.game.items[i] -= Gui.game.craft[item][i] * quantity
+            # Add the new item
+            Gui.game.items[item] += 1 * quantity
+            Gui.remove_quest(self, item)
+            Gui.write_to_outbox(self, f"{item} crafted.\n")
+            self.inventorybox.config(state="normal")
+            self.inventorybox.delete("1.0", END)
+            self.inventorybox.insert(INSERT, get_everything(Gui.game.items))
+            self.inventorybox.config(state="disabled")
+            if len(Gui.game.quests) == 0:
+                Gui.write_to_outbox(self, "\n**YOU HAVE MANAGED TO SURVIVE!\nWELL DONE!")
+                self.endgame("win")
 
         else:
-            Gui.writeToOutbox(self, "you can't")
+            Gui.write_to_outbox(self, "Error: That item does not exist in the crafting table.")
 
-    def popup(self, text):
-        pass
-
-    def removeQuest(self, arg):
+    def remove_quest(self, arg):
         arg = arg.capitalize()
         # for i in range(len(Gui.game.quests)):
         for item in Gui.game.quests[:]:
@@ -636,37 +605,37 @@ class Gui:
                     pass
         self.questbox.config(state="normal")
         self.questbox.delete("1.0", END)
-        a = geteverything(Gui.game.quests)  # Different way to do it
+        a = get_everything(Gui.game.quests)  # Different way to do it
         self.questbox.insert(INSERT, a)
         self.questbox.config(state="disabled")
 
 
-def geteverything(mlist):
-    if mlist is Gui.game.quests:
-        l = ""
-        for i in range(len(mlist)):
-            l += mlist[i] + "\n"
-        return l
-    elif mlist is Gui.game.craft:
-        l = ""
-        for key in mlist:
-            l += key + " can be made with:\n"
+def get_everything(objects):
+    if objects is Gui.game.quests:
+        quest_string = ""
+        for i in range(len(objects)):
+            quest_string += objects[i] + "\n"
+        return quest_string
+    elif objects is Gui.game.craft:
+        recipe_strings = ""
+        for key in objects:
+            recipe_strings += key + " can be made with:\n"
             for i in Gui.game.craft[key]:
-                l += str(Gui.game.craft[key][i]) + " " + i + "\n"
-            l += "\n"
-        return l
-    elif mlist is Gui.game.items:
-        l = ""
-        for key in mlist:
-            l += key + "\t:  " + str(mlist[key]) + "\n"
+                recipe_strings += str(Gui.game.craft[key][i]) + " " + i + "\n"
+            recipe_strings += "\n"
+        return recipe_strings
+    elif objects is Gui.game.items:
+        item_strings = ""
+        for key in objects:
+            item_strings += key + "\t:  " + str(objects[key]) + "\n"
         for key in Gui.game.foods:
-            l += key + "\t:  " + str(Gui.game.foods[key]["amount"]) + "\n"
-        return l
+            item_strings += key + "\t:  " + str(Gui.game.foods[key]["amount"]) + "\n"
+        return item_strings
     else:
-        l = ""
-        for key in mlist:
-            l += key + " : " + str(mlist[key]) + "\n"
-        return l
+        object_strings = ""
+        for key in objects:
+            object_strings += key + " : " + str(objects[key]) + "\n"
+        return object_strings
 
 
 ########################################################################################################################
